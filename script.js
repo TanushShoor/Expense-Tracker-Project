@@ -157,19 +157,24 @@ function initializeExpenseTracker(user) {
         }
     }
 
-    const expenseForm = document.getElementById('expense-form'); // Same as before
-    expenseForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const amount = parseFloat(document.getElementById('amount').value);
-        const category = document.getElementById('category').value;
-        const currency = document.getElementById('currency').value;
-        const description = document.getElementById('description').value;
+    const expenseForm = document.getElementById('expense-form'); // Get the form
 
-        addExpense(amount, category, currency, description);
-        expenseForm.reset();
-    });
+    if (expenseForm) { // Check if the form exists
+        expenseForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const amount = parseFloat(document.getElementById('amount').value);
+            const category = document.getElementById('category').value;
+            const currency = document.getElementById('currency').value;
+            const description = document.getElementById('description').value;
 
-    fetchExchangeRates().then(() => { // Same as before
+            addExpense(amount, category, currency, description);
+            expenseForm.reset();
+        });
+    } else {
+        console.error("Expense form not found!");
+    }
+
+    fetchExchangeRates().then(() => {
         updateExpenseList();
         updateChart();
     });
