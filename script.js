@@ -1,3 +1,4 @@
+
 // script.js
 const auth = firebase.auth();
 
@@ -16,6 +17,8 @@ function signInWithGoogle() {
         })
         .catch((error) => {
             console.error("Error signing in:", error);
+            const errorCode = error.code;
+            const errorMessage = error.message;
         });
 }
 
@@ -23,6 +26,8 @@ function signUpWithGoogle() {
     auth.signInWithPopup(provider)
         .then((result) => {
             const user = result.user;
+            // You can store additional user data in Firestore if needed
+            // db.collection('users').doc(user.uid).set({ /* ... */ });
             authContainer.style.display = 'none';
             appContainer.style.display = 'block';
             loadAppContent(user);
@@ -46,7 +51,7 @@ function initializeExpenseTracker(user) {
     let exchangeRates = {};
     let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
-    async function fetchExchangeRates() {
+    async function fetchExchangeRates() { // Same as before
         try {
             const response = await fetch(`https://openexchangerates.org/api/latest.json?app_id=${apiKey}`);
             if (!response.ok) {
@@ -60,7 +65,7 @@ function initializeExpenseTracker(user) {
         }
     }
 
-    function addExpense(amount, category, currency, description, date) {
+    function addExpense(amount, category, currency, description) { // Same as before
         if (isNaN(amount)) {
             alert("Please enter a valid number for the amount.");
             return;
@@ -71,62 +76,30 @@ function initializeExpenseTracker(user) {
             category,
             currency,
             description,
-            date: date
         });
         localStorage.setItem('expenses', JSON.stringify(expenses));
         updateExpenseList();
         updateChart();
     }
 
-    function updateExpenseList() {
+
+
+    function updateExpenseList() { // Same as before
         const expenseList = document.getElementById('expense-list');
         expenseList.innerHTML = '';
-
-        let totalExpenses = 0;
-
         expenses.forEach(expense => {
-            const item = document.createElement('tr');
-
-            const dateCell = item.insertCell();
-            const typeCell = item.insertCell();
-            const amountCell = item.insertCell();
-
-            const amountRounded = Math.round(expense.amount);
-            const amountFormatted = new Intl.NumberFormat(undefined, {
-                style: 'currency',
-                currency: expense.currency
-            }).format(amountRounded);
-
-            dateCell.textContent = expense.date || "N/A";
-            typeCell.textContent = expense.category;
-            amountCell.textContent = amountFormatted;
-
+            const item = document.createElement('li');
+            item.textContent = `${expense.description} - ${expense.amount} USD (${expense.category})`;
             expenseList.appendChild(item);
-
-            totalExpenses += expense.amount;
         });
-
-        const totalRow = document.createElement('tr');
-        const totalLabelCell = totalRow.insertCell();
-        const totalAmountCell = totalRow.insertCell();
-
-        const totalRounded = Math.round(totalExpenses);
-        const totalFormatted = new Intl.NumberFormat(undefined, {
-            style: 'currency',
-            currency: expenses[0]?.currency || 'USD'
-        }).format(totalRounded);
-
-        totalLabelCell.textContent = "Total:";
-        totalAmountCell.textContent = totalFormatted;
-        expenseList.appendChild(totalRow);
     }
 
-    function convertCurrency(amount, fromCurrency, toCurrency) {
+    function convertCurrency(amount, fromCurrency, toCurrency) { // Same as before
         if (!exchangeRates[fromCurrency] || !exchangeRates[toCurrency]) return amount;
         return (amount / exchangeRates[fromCurrency]) * exchangeRates[toCurrency];
     }
 
-    function calculateCategoryBreakdown() {
+    function calculateCategoryBreakdown() { // Same as before
         const breakdown = {};
         expenses.forEach(expense => {
             if (typeof expense.amount !== 'number' || typeof expense.category !== 'string') {
@@ -141,7 +114,7 @@ function initializeExpenseTracker(user) {
         return breakdown;
     }
 
-    function updateChart() {
+    function updateChart() { // Same as before
         const breakdown = calculateCategoryBreakdown();
         const categories = Object.keys(breakdown);
         const amounts = Object.values(breakdown);
@@ -184,62 +157,51 @@ function initializeExpenseTracker(user) {
         }
     }
 
-    const expenseForm = document.getElementById('expense-form');
+    const expenseForm = document.getElementById('expense-form'); // Same as before
     expenseForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const amount = parseFloat(document.getElementById('amount').value);
         const category = document.getElementById('category').value;
         const currency = document.getElementById('currency').value;
         const description = document.getElementById('description').value;
-        const date = document.getElementById('date').value;
 
-        addExpense(amount, category, currency, description, date);
+        addExpense(amount, category, currency, description);
         expenseForm.reset();
     });
 
-    fetchExchangeRates().then(() => {
+    fetchExchangeRates().then(() => { // Same as before
         updateExpenseList();
         updateChart();
     });
 }
 
+// auth.onAuthStateChanged((user) => {
+//     if (user) {
+//         authContainer.style.display = 'none';
+//         appContainer.style.display = 'block';
+//         loadAppContent(user);
+//     } else {
+//         authContainer.style.display = 'block';
+//         appContainer.style.display = 'none';
+//     }
+// });
+
 auth.onAuthStateChanged((user) => {
     if (user) {
+        // User is signed in
         authContainer.style.display = 'none';
         appContainer.style.display = 'block';
-        document.getElementById('sign-out-container').style.display = 'block';
+        document.getElementById('sign-out-container').style.display = 'block'; // Show sign-out button
         loadAppContent(user);
     } else {
+        // User is NOT signed in
         authContainer.style.display = 'block';
         appContainer.style.display = 'none';
-        document.getElementById('sign-out-container').style.display = 'none';
+        document.getElementById('sign-out-container').style.display = 'none'; // Hide sign-out button
     }
 });
 
-function signOut() {
-    auth.signOut().then(() => {
-        console.log("User signed out");
-    }).catch((error) => {
-        console.error("Error signing out:", error);
-    });
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// // script.js
+// script.js
 // const auth = firebase.auth();
 
 // const authContainer = document.getElementById('auth-container');
@@ -257,8 +219,6 @@ function signOut() {
 //         })
 //         .catch((error) => {
 //             console.error("Error signing in:", error);
-//             const errorCode = error.code;
-//             const errorMessage = error.message;
 //         });
 // }
 
@@ -266,8 +226,6 @@ function signOut() {
 //     auth.signInWithPopup(provider)
 //         .then((result) => {
 //             const user = result.user;
-//             // You can store additional user data in Firestore if needed
-//             // db.collection('users').doc(user.uid).set({ /* ... */ });
 //             authContainer.style.display = 'none';
 //             appContainer.style.display = 'block';
 //             loadAppContent(user);
@@ -291,7 +249,7 @@ function signOut() {
 //     let exchangeRates = {};
 //     let expenses = JSON.parse(localStorage.getItem('expenses')) || [];
 
-//     async function fetchExchangeRates() { // Same as before
+//     async function fetchExchangeRates() {
 //         try {
 //             const response = await fetch(`https://openexchangerates.org/api/latest.json?app_id=${apiKey}`);
 //             if (!response.ok) {
@@ -305,7 +263,7 @@ function signOut() {
 //         }
 //     }
 
-//     function addExpense(amount, category, currency, description) { // Same as before
+//     function addExpense(amount, category, currency, description, date) {
 //         if (isNaN(amount)) {
 //             alert("Please enter a valid number for the amount.");
 //             return;
@@ -316,30 +274,62 @@ function signOut() {
 //             category,
 //             currency,
 //             description,
+//             date: date
 //         });
 //         localStorage.setItem('expenses', JSON.stringify(expenses));
 //         updateExpenseList();
 //         updateChart();
 //     }
 
-
-
-//     function updateExpenseList() { // Same as before
+//     function updateExpenseList() {
 //         const expenseList = document.getElementById('expense-list');
 //         expenseList.innerHTML = '';
+
+//         let totalExpenses = 0;
+
 //         expenses.forEach(expense => {
-//             const item = document.createElement('li');
-//             item.textContent = `${expense.description} - ${expense.amount} USD (${expense.category})`;
+//             const item = document.createElement('tr');
+
+//             const dateCell = item.insertCell();
+//             const typeCell = item.insertCell();
+//             const amountCell = item.insertCell();
+
+//             const amountRounded = Math.round(expense.amount);
+//             const amountFormatted = new Intl.NumberFormat(undefined, {
+//                 style: 'currency',
+//                 currency: expense.currency
+//             }).format(amountRounded);
+
+//             dateCell.textContent = expense.date || "N/A";
+//             typeCell.textContent = expense.category;
+//             amountCell.textContent = amountFormatted;
+
 //             expenseList.appendChild(item);
+
+//             totalExpenses += expense.amount;
 //         });
+
+//         const totalRow = document.createElement('tr');
+//         const totalLabelCell = totalRow.insertCell();
+//         const totalAmountCell = totalRow.insertCell();
+
+//         const totalRounded = Math.round(totalExpenses);
+//         const totalFormatted = new Intl.NumberFormat(undefined, {
+//             style: 'currency',
+//             currency: expenses[0]?.currency || 'USD'
+//         }).format(totalRounded);
+
+//         totalLabelCell.textContent = "Total:";
+//         totalAmountCell.textContent = totalFormatted;
+//         expenseList.appendChild(totalRow);
 //     }
 
-//     function convertCurrency(amount, fromCurrency, toCurrency) { // Same as before
+//     function convertCurrency(amount, fromCurrency, toCurrency) {
 //         if (!exchangeRates[fromCurrency] || !exchangeRates[toCurrency]) return amount;
 //         return (amount / exchangeRates[fromCurrency]) * exchangeRates[toCurrency];
 //     }
 
-//     function calculateCategoryBreakdown() { // Same as before
+//     function calculateCategoryBreakdown() {
 //         const breakdown = {};
 //         expenses.forEach(expense => {
 //             if (typeof expense.amount !== 'number' || typeof expense.category !== 'string') {
@@ -354,7 +344,7 @@ function signOut() {
 //         return breakdown;
 //     }
 
-//     function updateChart() { // Same as before
+//     function updateChart() {
 //         const breakdown = calculateCategoryBreakdown();
 //         const categories = Object.keys(breakdown);
 //         const amounts = Object.values(breakdown);
@@ -397,46 +387,43 @@ function signOut() {
 //         }
 //     }
 
-//     const expenseForm = document.getElementById('expense-form'); // Same as before
+//     const expenseForm = document.getElementById('expense-form');
 //     expenseForm.addEventListener('submit', (e) => {
 //         e.preventDefault();
 //         const amount = parseFloat(document.getElementById('amount').value);
 //         const category = document.getElementById('category').value;
 //         const currency = document.getElementById('currency').value;
 //         const description = document.getElementById('description').value;
+//         const date = document.getElementById('date').value;
 
-//         addExpense(amount, category, currency, description);
+//         addExpense(amount, category, currency, description, date);
 //         expenseForm.reset();
 //     });
 
-//     fetchExchangeRates().then(() => { // Same as before
+//     fetchExchangeRates().then(() => {
 //         updateExpenseList();
 //         updateChart();
 //     });
 // }
 
-// // auth.onAuthStateChanged((user) => {
-// //     if (user) {
-// //         authContainer.style.display = 'none';
-// //         appContainer.style.display = 'block';
-// //         loadAppContent(user);
-// //     } else {
-// //         authContainer.style.display = 'block';
-// //         appContainer.style.display = 'none';
-// //     }
-// // });
-
 // auth.onAuthStateChanged((user) => {
 //     if (user) {
-//         // User is signed in
 //         authContainer.style.display = 'none';
 //         appContainer.style.display = 'block';
-//         document.getElementById('sign-out-container').style.display = 'block'; // Show sign-out button
+//         document.getElementById('sign-out-container').style.display = 'block';
 //         loadAppContent(user);
 //     } else {
-//         // User is NOT signed in
 //         authContainer.style.display = 'block';
 //         appContainer.style.display = 'none';
-//         document.getElementById('sign-out-container').style.display = 'none'; // Hide sign-out button
+//         document.getElementById('sign-out-container').style.display = 'none';
 //     }
 // });
+
+// function signOut() {
+//     auth.signOut().then(() => {
+//         console.log("User signed out");
+//     }).catch((error) => {
+//         console.error("Error signing out:", error);
+//     });
+// }
+
