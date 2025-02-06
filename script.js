@@ -172,13 +172,28 @@ function initializeExpenseTracker(user) {
     });
 }
 
+// auth.onAuthStateChanged((user) => {
+//     if (user) {
+//         authContainer.style.display = 'none';
+//         appContainer.style.display = 'block';
+//         loadAppContent(user);
+//     } else {
+//         authContainer.style.display = 'block';
+//         appContainer.style.display = 'none';
+//     }
+// });
+
 auth.onAuthStateChanged((user) => {
     if (user) {
+        // User is signed in
         authContainer.style.display = 'none';
         appContainer.style.display = 'block';
+        document.getElementById('sign-out-container').style.display = 'block'; // Show sign-out button
         loadAppContent(user);
     } else {
+        // User is NOT signed in
         authContainer.style.display = 'block';
         appContainer.style.display = 'none';
+        document.getElementById('sign-out-container').style.display = 'none'; // Hide sign-out button
     }
 });
