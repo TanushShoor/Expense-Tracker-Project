@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker</title>
+    <link rel="stylesheet" href="style.css">
+
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.0.0/firebase-auth-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyB13O1Qoo89TvEpQ3goXYHS0AzhwjqXNMA", // Your API Key
+            authDomain: "expense-tracker-79e80.firebaseapp.com", // Your Auth Domain
+            projectId: "expense-tracker-79e80", // Your Project ID
+            storageBucket: "expense-tracker-79e80.firebasestorage.app", // Your Storage Bucket
+            messagingSenderId: "562856228226", // Your Messaging Sender ID
+            appId: "1:562856228226:web:da6f07c72fc2c75b578b9b", // Your App ID
+            measurementId: "G-5NBGPNL39L" // Your Measurement ID
+        };
+
+        firebase.initializeApp(firebaseConfig);
+    </script>
+</head>
+<body>
+    <div id="auth-container">
+        <h1>Welcome to Expense Tracker</h1>
+        <button onclick="signInWithGoogle()">Sign in with Google</button>
+        <p>Or</p>
+        <button onclick="signUpWithGoogle()">Sign up with Google</button>
+    </div>
+
+    <div id="app-container" style="display: none;"></div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

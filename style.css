@@ -1,0 +1,214 @@
+/* styles.css */
+
+/* Body Styling */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Headings Styling */
+h1, h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* Form Styling */
+form {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    width: 300px;
+    animation: formSlideIn 0.5s ease-out; /* Animation for form entry */
+}
+
+/* Input, Select, Button Styling */
+input, select, button {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s ease; /* Smooth transition for input border color */
+}
+
+/* Focus on Input Fields - Highlight Effect */
+input:focus, select:focus {
+    border-color: #007bff;
+    animation: inputFocus 0.3s ease-in-out; /* Focus animation */
+}
+
+/* Button Styling */
+button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Smooth transition for button color */
+}
+
+/* Button Hover Effect */
+button:hover {
+    background-color: #0056b3;
+}
+
+/* Unordered List Styling for Expense List */
+ul {
+    list-style: none;
+    padding: 0;
+    width: 300px;
+    animation: fadeIn 1s ease-out; /* Animation for the expense list */
+}
+
+/* Individual Expense Item Styling */
+li {
+    background: white;
+    padding: 10px;
+    margin-top: 5px;
+    border-radius: 5px;
+    box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    opacity: 0;
+    animation: fadeInItem 0.5s ease-out forwards; /* Animation for item appearance */
+}
+
+/* Canvas for Chart Styling */
+canvas {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    width: 150px;
+    animation: chartGrow 1s ease-out; /* Animation for chart appearance */
+}
+
+/* New Expense Entry Animation */
+@keyframes formSlideIn {
+    from {
+        transform: translateY(-20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Input Field Focus Animation */
+@keyframes inputFocus {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+/* Fade-in Animation for Expense List */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Fade-in Animation for Each Expense Item */
+@keyframes fadeInItem {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+/* Grow Animation for Chart */
+@keyframes chartGrow {
+    from {
+        transform: scale(0.8);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Toast Notification Styling */
+.toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    animation: toastInOut 3s ease-in-out; /* Toast notification animation */
+}
+
+/* Toast Notification Fade-in/out Animation */
+@keyframes toastInOut {
+    0% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    25% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    75% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+}
+
+/* Error Alert Animation */
+.error-alert {
+    background-color: #dc3545;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    animation: shake 0.5s ease-out; /* Error shake animation */
+}
+
+/* Shake Animation for Error Alerts */
+@keyframes shake {
+    0% {
+        transform: translateX(0);
+    }
+    25% {
+        transform: translateX(-5px);
+    }
+    50% {
+        transform: translateX(5px);
+    }
+    75% {
+        transform: translateX(-5px);
+    }
+    100% {
+        transform: translateX(0);
+    }
+}
